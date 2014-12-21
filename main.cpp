@@ -1,5 +1,6 @@
 // include
-#include <std>
+#include <stdlib.h>
+#include <iostream>
 using namespace std;
 
 // the main programm
