@@ -7,5 +7,8 @@ using namespace std;
 int main()
 {
     // some output
-    cout << "Hello, World!" << endl;
+    for (int i; i<1000; i++)
+    {
+        cout << "Hello, World; Count: " << i << endl;
+    }
 }
