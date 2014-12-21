@@ -22,7 +22,8 @@ build/*
 *.xcworkspace
 xcuserdata
 *.xcodeproj/ !*.xcodeproj/project.pbxproj
- 
+
+TestCPP.xcodeproj
   
 #    NB: also, whitelist the default ones, some projects need to use these
 !default.pbxuser
