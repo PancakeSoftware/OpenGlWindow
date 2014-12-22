@@ -25,8 +25,8 @@ GLint HANDEL_SHADER,
       HANDEL_SHADER_UNI_TRANSFORM,
       HANDEL_SHADER_UNI_COLOR;
 
-int windowWith  = 1500;
-int windowHight = 400;
+int windowWith  = 1200;
+int windowHight = 800;
 
 
 
