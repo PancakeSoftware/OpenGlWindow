@@ -5,7 +5,8 @@ using namespace std;
 
 /* -- includes depinding on platform */
 #ifdef          __gnu_linux__
-    
+    #include <SDL/SDL.h>
+    #include <SDL/SDL_opengl.h>
         
 #elif defined   __APPLE__     
 #elif defined   __WINDOWS__        
@@ -19,11 +20,27 @@ using namespace std;
 // -- Linux - Ubuntu 
 bool createWindowUbuntu()
 {
+    int error = 0;
     cout << "[....] creating Window for Ubuntu" << endl;
     
-    /* @TODO
-     * create openGl Surface for Ubuntu
-     */
+    // init sdl -----------------------------
+    error = SDL_Init(SDL_INIT_VIDEO);
+    if (error != 0)
+    {
+        cout << "[ERR ] SDL_Init" << endl;
+        return false;
+    }
+    else 
+        cout << "[ OK ] SDL_Init" << endl;
+    
+    // set window titel
+    SDL_WM_SetCaption("OpenGl Window", "");
+    
+    // activate doublebuffering
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    
+    // open window
+    SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
 }
 
 
@@ -82,4 +99,14 @@ int main()
         createWindowPi();   
         
     #endif
+
+        
+        
+    // render loop
+    while (true)
+    {
+        /* @TODO
+         * add some test rendering code
+         */
+    }
 }
