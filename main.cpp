@@ -15,6 +15,9 @@ using namespace std;
 
 
 
+/* -- PRE DEFINED FUNC ---------------------------------------- */
+void renderLoop();
+
 
 /* -- CREATE OPENGL WINDOW ------------------------------------ */
 // -- Linux - Ubuntu 
@@ -102,11 +105,37 @@ int main()
 
         
         
+    // start render loop
+    renderLoop();
+}
+
+
+
+/* -- RENDER LOOP ---------------------------------------------- */
+void renderLoop()
+{
+    // sdl event
+    SDL_Event event;
+    
+    
     // render loop
     while (true)
     {
-        /* @TODO
-         * add some test rendering code
-         */
+        // get next SDL event
+        SDL_PollEvent(&event);
+        
+        // check for SDL event
+        switch (event.type)
+        {
+            case SDL_QUIT:
+                cout << "[END ] close program" << endl;
+                SDL_Quit();// close SDL
+                exit(0);    // close program
+        }
+        
+        
+        
+        // clear framebuffer
+        
     }
 }
