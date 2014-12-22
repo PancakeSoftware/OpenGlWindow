@@ -9,18 +9,6 @@ using namespace std;
 
 
 
-
-/* -- MAIN PROGRAM ------------------------------------------- */
-int main()
-{
-    // output
-    cout << "[ OK ] program start" << endl;
-    
-        
-}
-
-
-
 /* -- CREATE OPENGL WINDOW ------------------------------------ */
 // -- Linux - Ubuntu 
 bool createWindowUbuntu()
@@ -63,4 +51,29 @@ bool createWindowWin()
     /* @TODO
      * create openGl Surface for Windows
      */
+}
+
+
+
+
+/* -- MAIN PROGRAM ------------------------------------------- */
+int main()
+{
+    // output
+    cout << "[ OK ] program start" << endl;
+    
+    // execute depending on platform
+    #ifdef          __gnu_linux__
+        createWindowUbuntu();
+        
+    #elif defined   __APPLE__
+        createWindowMac();
+        
+    #elif defined   __WINDOWS__
+        createWindowWin();
+        
+    #else 
+        createWindowPi();   
+        
+    #endif
 }
