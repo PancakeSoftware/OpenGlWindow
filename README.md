@@ -1,6 +1,6 @@
 # Opengl Test Project
 This program opens a opengl window independent form the current platform
-![alt tag](https://raw.github.com/PancakeSoftware/OpenGlWindow/edit/master/screenshot.png)
+![alt tag](/screenshot.png?raw=true)
 
 ## Dependencies
 ### Linux
