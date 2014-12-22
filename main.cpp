@@ -131,11 +131,34 @@ void renderLoop()
                 cout << "[END ] close program" << endl;
                 SDL_Quit();// close SDL
                 exit(0);    // close program
+                break;
         }
         
         
         
-        // clear framebuffer
         
+        /* clear framebuffer 
+         * -> red               */
+        glClearColor(1.0, 0, 0, 0.5);
+        glClear( GL_COLOR_BUFFER_BIT );
+        
+        
+        // draw some stuff
+        glBegin( GL_TRIANGLES );
+        glColor3f(1,1,1);
+        
+        glVertex3f(-0.5, 0.0, 0);
+        glVertex3f( 0.0, 0.5, 0);
+        glVertex3f( 0.5, 0.0, 0);
+        
+        glEnd();
+                
+        
+        
+        // swarp buffer
+        SDL_GL_SwapBuffers();
     }
 }
+
+
+/* -- CREATE SHADER ----------------------------- */
