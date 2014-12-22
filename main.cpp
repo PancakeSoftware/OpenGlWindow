@@ -3,9 +3,15 @@
 #include <iostream>
 using namespace std;
 
-/* @TODO
- * different includes for different platforms
- */
+/* -- includes depinding on platform */
+#ifdef          __gnu_linux__
+    
+        
+#elif defined   __APPLE__     
+#elif defined   __WINDOWS__        
+#else  
+#endif
+
 
 
 
