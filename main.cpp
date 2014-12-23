@@ -198,18 +198,19 @@ void renderLoop()
                     
                     // out
                     // cout << "[INFO] window height: " << h << "  width: " << w << endl;
+                    // reset screen
+                    // SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
                     
                     // resize ortho
-//                    transformMatrix = glm::ortho( -(float)w/2  /* left */,
-//                                                    (float)w/2  /* right */,
-//                                                   -(float)h/2 /* bottom */,
-//                                                    (float)h/2 /* top */,
-//
-//                                                    1.0f                     /* zNear */,
-//                                                   -1.0f                     /* zFar */);
+                    transformMatrix = glm::ortho( -(float)w/2  /* left */,
+                                                    (float)w/2  /* right */,
+                                                   -(float)h/2 /* bottom */,
+                                                    (float)h/2 /* top */,
+
+                                                    1.0f                     /* zNear */,
+                                                   -1.0f                     /* zFar */);
                     
-                    // reset screen
-                    SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+                    
                     
                     break;
             }
@@ -223,18 +224,7 @@ void renderLoop()
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glClear( GL_COLOR_BUFFER_BIT );
         
-        
-        // remove
-        float value = (0.03*glm::sin(time));
-        float value2 = (0.03*glm::cos(time));
-        
-        glm::vec3 move = glm::vec3(value,value2,0);
-        glm::vec3 rot = glm::vec3(0,0,1);
-        
-        
-        glm::mat4 moveMatrix = glm::translate(glm::mat4(1.0f), move);
-        glm::mat4 rotMatrix = glm::rotate(glm::mat4(1.0f), value*100,rot);
-        transformMatrix = moveMatrix * transformMatrix *  rotMatrix;
+       
         
         // draw some stuff -------------------------------------------------
         // aktivate shader program
@@ -243,17 +233,36 @@ void renderLoop()
         // set attribute to recive vertex data
         glEnableVertexAttribArray(HANDEL_SHADER_ATTR_VERTEX);
         
+        
+        
+        
+        for (float i=-1; i<=1.0; i+=0.5)
+        {
+        // remove
+        float value = (0.3*glm::sin(time)+i);
+        float value2 = (0.3*glm::cos(time+i));
+        
+        glm::vec3 move = glm::vec3(value,value2,0);
+        glm::vec3 rot = glm::vec3(0,0,1);
+        
+        
+        glm::mat4 moveMatrix  = glm::translate(glm::mat4(1.0f), move);
+        glm::mat4 rotMatrix   = glm::rotate(glm::mat4(1.0f), value*100,rot);
+        glm::mat4 matrixFinal = moveMatrix * transformMatrix *  rotMatrix;
+        
+        
+        
         // set transform/projecttion matrix
         glUniformMatrix4fv(HANDEL_SHADER_UNI_TRANSFORM,
                        1                /* amount of matrix */,
                        GL_FALSE         /* convert format -> NO */,
-                       &transformMatrix[0][0]);
+                       &matrixFinal[0][0]);
         
         // set color
         glUniform4f(HANDEL_SHADER_UNI_COLOR,
-                    0.0,
-                    value*20,
-                    value2*20,
+                    1.0,
+                    value,
+                    value2,
                     1.0);
         
         // give gl the Vertices via array
@@ -272,6 +281,8 @@ void renderLoop()
             0 /* Array start pos   */,
             4 /* how much vertices */);
 
+         }
+        
 
         // deactivate vertex Array mode
         // => end of operation
