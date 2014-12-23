@@ -1,5 +1,6 @@
 # Opengl Test Project
 This program opens a opengl window independent form the current platform
+![alt tag](/screenshot.png?raw=true)
 
 ## Dependencies
 ### Linux
