@@ -1,6 +1,7 @@
 /* -- INCLUDE ------------------------------------------------ */
 #include <stdlib.h>
 #include <iostream>
+#include <sstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // gl Math matix transform
 using namespace std;
@@ -145,7 +146,7 @@ int main()
 void renderLoop()
 {
     float time = 0;
-    
+    int   frame = 0;    
     // vertices
     GLfloat vertices[12] = {
         -100, -100, 0,
@@ -216,6 +217,12 @@ void renderLoop()
                     break;
             }
         }
+        
+        // set window titel
+        ostringstream stream;
+        stream << "OpenGl Window - Frame " << frame;
+        const char* streamO = stream.str().c_str();
+        SDL_WM_SetCaption(streamO, "");
         
         
         
@@ -299,6 +306,7 @@ void renderLoop()
         SDL_GL_SwapBuffers();
         
         time+= 0.09;
+        frame++;
     }
 }
 
