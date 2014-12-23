@@ -192,15 +192,15 @@ void renderLoop()
                     exit(0);    // close program
                     break;
                     
-                case SDL_RESIZABLE:
+                case SDL_VIDEORESIZE:
                     int h = event.resize.h; 
                     int w = event.resize.w;
                     
                     // out
                     // cout << "[INFO] window height: " << h << "  width: " << w << endl;
                     // reset screen
-                    // SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
-                    
+                    SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+                    glViewport(0,0, w, h);
                     // resize ortho
                     transformMatrix = glm::ortho( -(float)w/2  /* left */,
                                                     (float)w/2  /* right */,
@@ -236,13 +236,13 @@ void renderLoop()
         
         
         
-        for (float i=-1; i<=1.0; i+=0.5)
+        for (float i=-1; i<=1.0; i+=0.25)
         {
         // remove
         float value = (0.3*glm::sin(time)+i);
         float value2 = (0.3*glm::cos(time+i));
         
-        glm::vec3 move = glm::vec3(value,value2,0);
+        glm::vec3 move = glm::vec3(value,value2, 0);
         glm::vec3 rot = glm::vec3(0,0,1);
         
         
