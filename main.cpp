@@ -118,7 +118,8 @@ int main()
         createWindowUbuntu();
         
     #elif defined   __APPLE__
-        createWindowMac();
+        //createWindowMac();
+        createWindowUbuntu();
         
     #elif defined   __WINDOWS__
         createWindowWin();
