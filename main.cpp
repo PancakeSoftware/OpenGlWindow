@@ -25,6 +25,8 @@ using namespace std;
 
 
 // -- VAR
+SDL_Surface *surface;
+
 GLint HANDEL_SHADER,
       HANDEL_SHADER_ATTR_VERTEX,
       HANDEL_SHADER_UNI_TRANSFORM,
@@ -65,10 +67,13 @@ bool createWindowUbuntu()
     // activate doublebuffering
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     
+    // enabel antialasing with multisampeling
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
     
-    
+
     // open window
-    SDL_SetVideoMode(windowWith, windowHight, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    surface = SDL_SetVideoMode(windowWith, windowHight, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
     
     // init glew
     glewInit();
@@ -181,6 +186,9 @@ void renderLoop()
     
     // create shader
     createShader();
+            
+    // enable antialiasing with multisampeling
+    glEnable(GL_MULTISAMPLE);
 
     
     
@@ -211,8 +219,10 @@ void renderLoop()
                     // out
                     // cout << "[INFO] window height: " << h << "  width: " << w << endl;
                     // reset screen
-                    SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+                    SDL_FreeSurface(surface);
+                    surface = SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
                     glViewport(0,0, w, h);
+                    
                     // resize ortho
                     transformMatrix = glm::ortho( -(float)w/2  /* left */,
                                                     (float)w/2  /* right */,
@@ -363,7 +373,7 @@ void renderLoop()
         // swarp buffer
         SDL_GL_SwapBuffers();
         
-        time+= 0.09;
+        time+= 0.009;
         frame++;
         
         
