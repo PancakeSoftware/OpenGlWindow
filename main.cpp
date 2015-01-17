@@ -9,7 +9,7 @@ using namespace std;
 #ifdef          __gnu_linux__
     #include <GL/glew.h>
     #include <GL/glu.h>
-    #include <SDL/SDL.h>
+    #include <SDL2/SDL.h>
     //#include <SDL/SDL_opengl.h>
     
         
@@ -20,13 +20,16 @@ using namespace std;
 
 
 // -- VAR
+SDL_Window    *window;
+SDL_GLContext  context;
+
 GLint HANDEL_SHADER,
       HANDEL_SHADER_ATTR_VERTEX,
       HANDEL_SHADER_UNI_TRANSFORM,
       HANDEL_SHADER_UNI_COLOR;
 
-int windowWith  = 1500;
-int windowHight = 400;
+int windowWidth  = 1500;
+int windowHeight = 400;
 
 
 
@@ -54,15 +57,22 @@ bool createWindowUbuntu()
         cout << "[ OK ] SDL_Init" << endl;
     
     // set window titel
-    SDL_WM_SetCaption("OpenGl Window", "");
+    //SDL_WM_SetCaption("OpenGl Window", "");
     
     // activate doublebuffering
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+//    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     
     
     
     // open window
-    SDL_SetVideoMode(windowWith, windowHight, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    //SDL_SetVideoMode(windowWith, windowHight, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    window = SDL_CreateWindow("OpenGl Window with SDL2", 
+                                SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+                                windowWidth, windowHeight, 
+                                SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+    
+    // create context
+    context = SDL_GL_CreateContext(window);
     
     // init glew
     glewInit();
@@ -157,10 +167,10 @@ void renderLoop()
     // transform matrix
     glm::mat4 transformMatrix;
     // resize ortho
-    transformMatrix = glm::ortho( -(float)windowWith/2  /* left */,
-                                    (float)windowWith/2  /* right */,
-                                   -(float)windowHight/2 /* bottom */,
-                                    (float)windowHight/2 /* top */,
+    transformMatrix = glm::ortho( -(float)windowWidth/2  /* left */,
+                                    (float)windowWidth/2  /* right */,
+                                   -(float)windowHeight/2 /* bottom */,
+                                    (float)windowHeight/2 /* top */,
             
                                     1.0f                     /* zNear */,
                                    -1.0f                     /* zFar */);
@@ -188,35 +198,40 @@ void renderLoop()
             switch (event.type)
             {
                 case SDL_QUIT:
-                    cout << "[END ] close program" << endl;
+                    cout << "[END ] close program " << endl;
+                    SDL_DestroyWindow(window);
                     SDL_Quit();// close SDL
                     exit(0);    // close program
                     break;
                     
-                case SDL_VIDEORESIZE:
-                    int h = event.resize.h; 
-                    int w = event.resize.w;
-                    
-                    // out
-                    // cout << "[INFO] window height: " << h << "  width: " << w << endl;
-                    // reset screen
-                    SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
-                    glViewport(0,0, w, h);
-                    // resize ortho
-                    transformMatrix = glm::ortho( -(float)w/2  /* left */,
-                                                    (float)w/2  /* right */,
-                                                   -(float)h/2 /* bottom */,
-                                                    (float)h/2 /* top */,
+                // event from window
+                case SDL_WINDOWEVENT:
+                    switch(event.window.event)
+                    {
+                        case SDL_WINDOWEVENT_RESIZED:
+                            int w = event.window.data1; 
+                            int h = event.window.data2;
+                            //SDL_GetWindowSize(window, &w, &h);
+                            // out
+                            //cout << "[INFO] window height: " << h << "  width: " << w << endl;
+                            //cout << "[INEV] window height: " <<  << "  width: " << w << endl;
+                            // reset screen
+                            //SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+                            //SDL_SetWindowSize(window, w, h);
+                            glViewport(0,0, w, h);
 
-                                                    1.0f                     /* zNear */,
-                                                   -1.0f                     /* zFar */);
-                    
-                    
-                    
-                    break;
+                            // resize ortho
+                            transformMatrix = glm::ortho( -(float)w/2  /* left */,
+                                                            (float)w/2  /* right */,
+                                                           -(float)h/2 /* bottom */,
+                                                            (float)h/2 /* top */,
+
+                                                            1.0f                     /* zNear */,
+                                                           -1.0f                     /* zFar */);
+                            break;
+                    }
             }
-        }
-        
+        }        
         
         
         
@@ -296,7 +311,8 @@ void renderLoop()
         
         
         // swarp buffer
-        SDL_GL_SwapBuffers();
+        //SDL_GL_SwapBuffers();
+        SDL_GL_SwapWindow(window);
         
         time+= 0.09;
     }
