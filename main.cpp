@@ -1,6 +1,9 @@
 /* -- INCLUDE ------------------------------------------------ */
 #include <stdlib.h>
 #include <iostream>
+#include <sstream>
+
+//#include <>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // gl Math matix transform
 using namespace std;
@@ -10,6 +13,8 @@ using namespace std;
     #include <GL/glew.h>
     #include <GL/glu.h>
     #include <SDL2/SDL.h>
+    #include <ctime>
+    #include <unistd.h>
     //#include <SDL/SDL_opengl.h>
     
         
@@ -30,7 +35,7 @@ GLint HANDEL_SHADER,
 
 int windowWidth  = 1500;
 int windowHeight = 400;
-
+double fps      = 0;
 
 
 /* -- PRE DEFINED FUNC ---------------------------------------- */
@@ -63,7 +68,7 @@ bool createWindowUbuntu()
 //    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     
     
-    
+
     // open window
     //SDL_SetVideoMode(windowWith, windowHight, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
     window = SDL_CreateWindow("OpenGl Window with SDL2", 
@@ -150,12 +155,13 @@ int main()
 }
 
 
-
+ double starttime = 0;
+ double endtime   = 0;
 /* -- RENDER LOOP ---------------------------------------------- */
 void renderLoop()
-{
+{    
     float time = 0;
-    
+    int   frame = 0;    
     // vertices
     GLfloat vertices[12] = {
         -100, -100, 0,
@@ -231,7 +237,8 @@ void renderLoop()
                             break;
                     }
             }
-        }        
+        }
+        
         
         
         
@@ -299,6 +306,61 @@ void renderLoop()
 
          }
         
+        
+        
+        // -- FPS -----------------------------------------------
+         // vertices
+        GLfloat verticesFps[12] = {
+            -0, -10, 0,
+            -0, 0, 0,
+             (fps/4), -10, 0,
+             (fps/4), 0, 0
+        };
+        
+        // remove        
+        glm::vec3 move = glm::vec3(-1, +1,0);
+        glm::vec3 rot = glm::vec3(0,0,0);
+        
+        
+        glm::mat4 moveMatrix  = glm::translate(glm::mat4(1.0f), move);
+        glm::mat4 matrixFinal = moveMatrix * transformMatrix;
+        
+        
+        
+        // set transform/projecttion matrix
+        glUniformMatrix4fv(HANDEL_SHADER_UNI_TRANSFORM,
+                       1                /* amount of matrix */,
+                       GL_FALSE         /* convert format -> NO */,
+                       &matrixFinal[0][0]);
+        
+        // set color
+        glUniform4f(HANDEL_SHADER_UNI_COLOR,
+                    0.0,
+                    1.0,
+                    0.2,
+                    1.0);
+        
+        // give gl the Vertices via array
+        glVertexAttribPointer(
+            HANDEL_SHADER_ATTR_VERTEX                       /* pass vertices to vertex Pos attribute of vertexShader */,
+            3                                               /* 3 Aruments: x,y,z */,
+            GL_FLOAT                                        /* Format: float     */,
+            GL_FALSE                                        /* take values as-is */,   
+            0                                               /* Entry lenght ?    */,
+            verticesFps                       /* vertices Array    */ );
+    
+        // draw with the vertices form the given Array
+        // make two connected triangle to create a rectangle
+        glDrawArrays(
+            GL_TRIANGLE_STRIP,
+            0 /* Array start pos   */,
+            4 /* how much vertices */);
+        // -- End FPS -------------------------------------------
+        
+        
+        
+        
+        
 
         // deactivate vertex Array mode
         // => end of operation
@@ -314,7 +376,34 @@ void renderLoop()
         //SDL_GL_SwapBuffers();
         SDL_GL_SwapWindow(window);
         
-        time+= 0.09;
+        time+= 0.009;
+        frame++;
+        
+        
+        //sleep(3);
+        
+        // calc fps
+        endtime = clock();
+        double timeDiff = (endtime - starttime)/ (double) CLOCKS_PER_SEC;
+        double fpsTemp = 1/timeDiff ;
+        starttime = endtime;
+        
+        
+        if (frame >= 5)
+        {
+            fps = (fpsTemp);       
+            
+            // set window titel
+//            ostringstream stream;
+//            stream << "OpenGl Window - Fps " << fps;
+//            const char* streamO = stream.str().c_str();
+//            SDL_WM_SetCaption(streamO, "");
+            
+            
+            frame = 0;
+        }
+        
+
     }
 }
 
